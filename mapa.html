@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mapa con Coordenadas</title>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+</head>
+<body>
+
+    <h1>Mapa dispositivos inactivos CABB Diehl</h1>
+    <div id="map" style="height: 600px;"></div>
+
+    <script>
+        // Inicializar el mapa centrado en España
+        var map = L.map('map').setView([40.4168, -3.7038], 6);
+
+        // Cargar el mapa de OpenStreetMap
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Cargar el archivo JSON (coordenadas)
+        fetch('coordenadas.json')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data); // Verifica que los datos se cargan correctamente
+        data.forEach(coord => {
+            console.log(coord); // Verifica cada coordenada antes de usarla
+            if (coord.latitude && coord.longitude) {
+                L.marker([coord.latitude, coord.longitude]).addTo(map);
+            } else {
+                console.error('Coordenadas inválidas:', coord);
+            }
+        });
+    })
+    .catch(error => {
+        console.error('Error al cargar el archivo JSON:', error);
+    });
+    </script>
+
+</body>
+</html>
